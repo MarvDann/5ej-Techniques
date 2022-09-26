@@ -58,10 +58,7 @@ export async function requireUser(request: Request) {
   const userId = await requireUserId(request)
 
   const user = await getUserById(userId)
-  if (user)
-    return user.map((user: User) => ({
-      ...user,
-    }))
+  if (user) return user
 
   throw await logout(request)
 }
