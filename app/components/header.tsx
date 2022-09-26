@@ -2,7 +2,7 @@ import type { User } from "@prisma/client"
 import { Form, Link } from "@remix-run/react"
 
 interface Props {
-  user: User | undefined
+  user?: Pick<User, "email" | "id">
 }
 
 export default function Header({ user }: Props) {
