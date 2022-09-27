@@ -1,5 +1,5 @@
-import { json } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
+import { json } from '@remix-run/node'
 import Nav from '~/components/nav'
 import { getCategories } from '~/models/category.server'
 
@@ -13,7 +13,7 @@ export async function loader() {
   return json({ categories })
 }
 
-export default function TechniquesPage() {
+export default function CategoriesPage() {
   const data = useLoaderData<typeof loader>()
 
   return (

@@ -16,8 +16,10 @@ model User {
 
   password Password?
   notes    Note[]
-  categories Category[]
-  techniques Technique[]
+  userCreatedCategories Category[] @relation("category_created_by_user")
+  userUpdatedCategories Category[] @relation("category_updated_by_user")
+  userCreatedTechniques Technique[] @relation("technique_created_by_user")
+  userUpdatedTechniques Technique[] @relation("technique_updated_by_user")
 }
 
 model Password {
@@ -41,33 +43,43 @@ model Note {
 
 model Category {
   id        String @id @default(cuid())
+  slug      String
   name      String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  createdByUserId String
+  updatedByUserId String
 
-  createdBy User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
+  createdBy User @relation("category_created_by_user", fields: [createdByUserId], references: [id])
+  updatedBy User @relation("category_updated_by_user", fields: [updatedByUserId], references: [id])
 
-  techniques Technique[]
+  techniques Technique[] @relation("technique_category")
+  categoryImage String
 }
 
 model Technique {
   id          String @id @default(cuid())
   name        String
-  descrition  String
+  slug        String
+  details     String
   isBlueBelt  Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  createdBy User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
+  createdByUserId String
+  updatedByUserId String
 
-  category    Category @relation(fields: [categoryId], references: [id])
+  createdBy User @relation("technique_created_by_user", fields: [createdByUserId], references: [id])
+  updatedBy User @relation("technique_updated_by_user", fields: [updatedByUserId], references: [id])
+
+  category    Category @relation("technique_category", fields: [categoryId], references: [id])
   categoryId  String
 
   tags TechniqueTag[]
+  techniqueImage String
 }
 
 model Tag {

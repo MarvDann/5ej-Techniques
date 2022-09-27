@@ -1,0 +1,14 @@
+export interface PostCategory {
+  name: string
+  slug: string
+  userId: string
+  categoryImage: string
+}
+
+export interface PostTechnique {
+  name: string
+  slug: string
+  details: string
+  userId: string
+  techniqueImage: string
+}

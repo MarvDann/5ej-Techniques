@@ -23,7 +23,9 @@
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },
   "prettier": {
-    "semi": false
+    "semi": false,
+    "singleAttributePerLine": true,
+    "singleQuote": true
   },
   "eslintIgnore": [
     "/node_modules",
