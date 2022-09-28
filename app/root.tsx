@@ -29,15 +29,17 @@ export const meta: MetaFunction = () => ({
 export async function loader({ request }: LoaderArgs) {
   return json({
     user: await getUser(request),
+    url: request.url,
   })
 }
 
 interface LoaderData {
   user?: User
+  url: string
 }
 
 export default function App() {
-  let { user } = useLoaderData<LoaderData>()
+  let { user, url } = useLoaderData<LoaderData>()
   return (
     <html
       lang="en"
@@ -49,7 +51,10 @@ export default function App() {
       </head>
       <body className="h-full">
         <div className="flex h-full min-h-screen flex-col">
-          <Header user={user} />
+          <Header
+            user={user}
+            currentUrl={url}
+          />
           <main className="flex h-full bg-white">
             <Outlet />
           </main>

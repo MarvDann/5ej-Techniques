@@ -8,7 +8,10 @@ export interface PostCategory {
 export interface PostTechnique {
   name: string
   slug: string
-  details: string
+  details?: string
   userId: string
-  techniqueImage: string
+  techniqueImage?: string
+  youtubeVideoId?: string
+  isBlueBelt?: boolean
+  categoryId: string
 }

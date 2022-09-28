@@ -43,7 +43,7 @@ model Note {
 
 model Category {
   id        String @id @default(cuid())
-  slug      String
+  slug      String @unique
   name      String
 
   createdAt DateTime @default(now())
@@ -62,8 +62,8 @@ model Category {
 model Technique {
   id          String @id @default(cuid())
   name        String
-  slug        String
-  details     String
+  slug        String @unique
+  details     String?
   isBlueBelt  Boolean @default(false)
 
   createdAt DateTime @default(now())
@@ -79,7 +79,8 @@ model Technique {
   categoryId  String
 
   tags TechniqueTag[]
-  techniqueImage String
+  techniqueImage String?
+  youtubeVideoId String?
 }
 
 model Tag {

@@ -1,5 +1,6 @@
-import { json } from '@remix-run/node'
+import type { LoaderArgs } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
+import { json } from '@remix-run/node'
 import Nav from '~/components/nav'
 import { getCategories } from '~/models/category.server'
 
@@ -19,7 +20,7 @@ export default function TechniquesPage() {
   return (
     <>
       <Nav categories={data?.categories} />
-      <div>
+      <div className="w-full">
         <Outlet />
       </div>
     </>
