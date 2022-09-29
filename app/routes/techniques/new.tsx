@@ -12,7 +12,10 @@ import { getCategories } from '~/models/category.server'
 import type { PostTechnique } from '~/types'
 import { createTechnique } from '~/models/technique.server'
 import { requireUserId } from '~/session.server'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import QuillEditor from '~/components/QuillEditor.client'
+import stylesUrl from 'react-quill/dist/quill.snow.css'
+import type { LinksFunction } from '@remix-run/node'
 
 interface Cat {
   id: string
@@ -21,12 +24,22 @@ interface Cat {
   categoryImage: string
 }
 
+export const links: LinksFunction = () => {
+  return [
+    {
+      rel: 'stylesheet',
+      href: stylesUrl,
+    },
+  ]
+}
+
 export async function action({ request }: ActionArgs) {
   const userId = await requireUserId(request)
 
   const uploadHandler = unstable_composeUploadHandlers(
     unstable_createFileUploadHandler({
       maxPartSize: 5_000_000,
+      directory: 'public/uploads',
       file: ({ filename }) => filename,
     }),
     // parse everything else into memory
@@ -34,8 +47,6 @@ export async function action({ request }: ActionArgs) {
   )
 
   const formData = await unstable_parseMultipartFormData(request, uploadHandler)
-
-  console.log({ formData })
 
   const name = formData.get('name') as string
   const slug = formData.get('slug') as string
@@ -112,6 +123,7 @@ export default function AddNewTechniquePage() {
   const nameRef = useRef<HTMLInputElement>(null)
   const slugRef = useRef<HTMLInputElement>(null)
   const categoryRef = useRef<HTMLSelectElement>(null)
+  const [details, setDetails] = useState<string>('')
 
   useEffect(() => {
     if (actionData?.errors?.name) {
@@ -122,6 +134,10 @@ export default function AddNewTechniquePage() {
       categoryRef.current?.focus()
     }
   }, [actionData])
+
+  const handleEditorChange = (value: string) => {
+    setDetails(value)
+  }
 
   return (
     <div className="flex w-3/4 flex-col gap-6 p-6">
@@ -202,17 +218,16 @@ export default function AddNewTechniquePage() {
           )}
         </div>
         <div>
-          <label className="flex flex-col gap-1">
+          <label className="flex flex-col gap-1 pb-4">
             <span>Details: </span>
-            <textarea
-              // ref={bodyRef}
+            <QuillEditor
+              onChange={handleEditorChange}
+              value={details}
+            />
+            <input
+              type="hidden"
+              value={details}
               name="details"
-              rows={8}
-              className="w-full flex-1 rounded-md border-2 border-blue-500 py-2 px-3 text-lg leading-6"
-              // aria-invalid={actionData?.errors?.body ? true : undefined}
-              // aria-errormessage={
-              //   actionData?.errors?.body ? 'body-error' : undefined
-              // }
             />
           </label>
           {/* {actionData?.errors?.title && (

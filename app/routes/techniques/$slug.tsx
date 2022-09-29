@@ -4,6 +4,17 @@ import { json, redirect } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 import { deleteTechnique, getTechnique } from '~/models/technique.server'
 import { getUserId } from '~/session.server'
+import editorStylesUrl from './editorStyles.css'
+import type { LinksFunction } from '@remix-run/node'
+
+export const links: LinksFunction = () => {
+  return [
+    {
+      rel: 'stylesheet',
+      href: editorStylesUrl,
+    },
+  ]
+}
 
 export async function loader({ request, params }: LoaderArgs) {
   invariant(params.slug, 'slug not found')
@@ -56,7 +67,7 @@ export default function TechniqueDetailPage() {
         <div className="flex flex-col gap-2 p-6">
           <h2>Details</h2>
           <div
-            className="flex-grow"
+            className="rich-text flex-grow"
             dangerouslySetInnerHTML={{ __html: data.technique.details }}
           ></div>
           <div>
