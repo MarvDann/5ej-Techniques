@@ -16,7 +16,7 @@ async function seed() {
 
   await prisma.category.deleteMany().catch(() => {})
 
-  await prisma.user.deleteMany({ where: { email } }).catch(() => {
+  await prisma.user.deleteMany().catch(() => {
     // no worries if it doesn't exist yet
   })
 
