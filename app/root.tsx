@@ -12,9 +12,8 @@ import {
 
 import tailwindStylesheetUrl from './styles/tailwind.css'
 import { getUser } from './session.server'
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 import Header from './components/header'
-import Nav from './components/nav'
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: tailwindStylesheetUrl }]

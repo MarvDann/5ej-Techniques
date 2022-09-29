@@ -1,13 +1,12 @@
 import {
   json,
-  NodeOnDiskFile,
   redirect,
   unstable_composeUploadHandlers,
   unstable_createFileUploadHandler,
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from '@remix-run/node'
-import type { ActionArgs, LoaderArgs } from '@remix-run/node'
+import type { ActionArgs, LoaderArgs, NodeOnDiskFile } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { getCategories } from '~/models/category.server'
 import type { PostTechnique } from '~/types'
