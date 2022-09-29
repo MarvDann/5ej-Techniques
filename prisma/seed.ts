@@ -10,11 +10,17 @@ async function seed() {
   const email = 'marvdann76@remix.run'
 
   // cleanup the existing database
-  await prisma.user.delete({ where: { email } }).catch(() => {
+  await prisma.note.deleteMany().catch(() => {})
+
+  await prisma.technique.deleteMany().catch(() => {})
+
+  await prisma.category.deleteMany().catch(() => {})
+
+  await prisma.user.deleteMany({ where: { email } }).catch(() => {
     // no worries if it doesn't exist yet
   })
 
-  const hashedPassword = await bcrypt.hash('racheliscool', 10)
+  const hashedPassword = await bcrypt.hash('bigmanchest', 10)
 
   const user = await prisma.user.create({
     data: {
@@ -66,7 +72,7 @@ async function seed() {
       name: 'North South Arm Bar',
       slug: 'north-south-arm-bar',
       details:
-        '<ul class="m-4 list-disc text-sm text-gray-500"><li>Start from side control</li><li>Clear nearside arm</li><li>Unwind crossface arm and place elbow on jaw</li><li>Switch knees so that hip is close to head</li><li>Pushing down on the jaw, step over head and lift far side arm</li><li>Kneel straight down close feet together and sit back on head</li><li>Gable grip hands and rock the baby so hand position is other side of the arm</li><li>Take kimura grip on forearm</li><li>Keep tricep on your chest and disconnect their shoulder socket</li><li>Look towards where their back is facing and finish the kimura</li></ul>',
+        '<ul className="m-4 list-disc text-sm text-gray-500"><li>Start from side control</li><li>Clear nearside arm</li><li>Unwind crossface arm and place elbow on jaw</li><li>Switch knees so that hip is close to head</li><li>Pushing down on the jaw, step over head and lift far side arm</li><li>Kneel straight down close feet together and sit back on head</li><li>Gable grip hands and rock the baby so hand position is other side of the arm</li><li>Take kimura grip on forearm</li><li>Keep tricep on your chest and disconnect their shoulder socket</li><li>Look towards where their back is facing and finish the kimura</li></ul>',
       techniqueImage: 'fernao.png',
       categoryId: sideControl!.id,
       createdByUserId: user.id,
