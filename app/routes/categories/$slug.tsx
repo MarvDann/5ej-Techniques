@@ -19,13 +19,17 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function CategoryPage() {
   const data = useLoaderData<typeof loader>()
 
+  const imageUrl = data.category.categoryImage
+    ? `/uploads/${data.category.categoryImage}`
+    : 'https://placeholder.pics/svg/480x270/D5D5D5-F8F8F8/717171-858585/No%20image%20yet'
+
   return (
     <div className="flex flex-col gap-2 p-6">
       <h1 className="text-2xl font-semibold">{data.category.name}</h1>
       <div className="flex flex-row">
         <figure className="flex w-6/12 flex-col content-center border border-gray-200">
           <img
-            src={`/uploads/${data.category.categoryImage}`}
+            src={imageUrl}
             alt={data.category.name}
           />
           <figcaption className="py-1 text-center">
