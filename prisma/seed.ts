@@ -22,16 +22,18 @@ async function seed() {
 
   const hashedPassword = await bcrypt.hash('bigmanchest', 10)
 
-  await prisma.user.create({
-    data: {
-      email,
-      password: {
-        create: {
-          hash: hashedPassword,
+  await prisma.user
+    .create({
+      data: {
+        email,
+        password: {
+          create: {
+            hash: hashedPassword,
+          },
         },
       },
-    },
-  })
+    })
+    .catch(() => {})
 
   // await prisma.note.create({
   //   data: {
