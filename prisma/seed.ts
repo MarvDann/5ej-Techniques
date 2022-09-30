@@ -10,11 +10,11 @@ async function seed() {
   const email = 'marvdann76@remix.run'
 
   // cleanup the existing database
-  // await prisma.note.deleteMany().catch(() => {})
+  await prisma.note.deleteMany().catch(() => {})
 
-  // await prisma.technique.deleteMany().catch(() => {})
+  await prisma.technique.deleteMany().catch(() => {})
 
-  // await prisma.category.deleteMany().catch(() => {})
+  await prisma.category.deleteMany().catch(() => {})
 
   await prisma.user.deleteMany({ where: { email } }).catch(() => {
     // no worries if it doesn't exist yet

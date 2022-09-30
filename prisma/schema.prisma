@@ -91,9 +91,9 @@ model Tag {
 }
 
 model TechniqueTag {
-  tag Tag @relation(fields: [tagId], references: [id])
+  tag Tag @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId String
-  technique Technique @relation(fields: [techniqueId], references: [id])
+  technique Technique @relation(fields: [techniqueId], references: [id], onDelete: Cascade)
   techniqueId String
 
   @@id ([tagId, techniqueId])
