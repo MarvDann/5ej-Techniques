@@ -19,7 +19,7 @@ export default function CategoriesPage() {
   return (
     <>
       <Nav categories={data?.categories} />
-      <div>
+      <div className="w-full">
         <Outlet />
       </div>
     </>

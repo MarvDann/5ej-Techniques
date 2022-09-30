@@ -56,7 +56,7 @@ model Category {
   updatedBy User @relation("category_updated_by_user", fields: [updatedByUserId], references: [id])
 
   techniques Technique[] @relation("technique_category")
-  categoryImage String
+  categoryImage String?
 }
 
 model Technique {

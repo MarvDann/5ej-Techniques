@@ -2,7 +2,7 @@ export interface PostCategory {
   name: string
   slug: string
   userId: string
-  categoryImage: string
+  categoryImage?: string
 }
 
 export interface PostTechnique {
