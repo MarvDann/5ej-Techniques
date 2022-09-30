@@ -15,3 +15,7 @@ export interface PostTechnique {
   isBlueBelt?: boolean
   categoryId: string
 }
+
+export interface PutTechnique extends PostTechnique {
+  id: string
+}

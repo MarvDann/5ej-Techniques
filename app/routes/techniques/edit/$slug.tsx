@@ -9,13 +9,18 @@ import {
 import type { ActionArgs, LoaderArgs, NodeOnDiskFile } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { getCategories } from '~/models/category.server'
-import type { PostTechnique } from '~/types'
-import { createTechnique } from '~/models/technique.server'
+import type { PostTechnique, PutTechnique } from '~/types'
+import {
+  createTechnique,
+  getTechnique,
+  updateTechnique,
+} from '~/models/technique.server'
 import { requireUserId } from '~/session.server'
-import { useEffect, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import QuillEditor from '~/components/QuillEditor.client'
 import stylesUrl from 'react-quill/dist/quill.snow.css'
 import type { LinksFunction } from '@remix-run/node'
+import invariant from 'tiny-invariant'
 
 export const links: LinksFunction = () => {
   return [
@@ -47,10 +52,14 @@ export async function action({ request }: ActionArgs) {
   const uploadedImage = formData.get('techniqueImage') as
     | NodeOnDiskFile
     | undefined
-  const techniqueImage = uploadedImage ? uploadedImage?.name : undefined
+  const existingImage = (formData.get('existingImage') as string) || undefined
+  const techniqueImage = uploadedImage?.name
+    ? uploadedImage.name
+    : existingImage
   const youtubeVideoId = (formData.get('youtubeVideoId') as string) || undefined
   const isBlueBelt = !!formData.get('isBlueBelt')
   const categoryId = formData.get('categoryId') as string
+  const id = formData.get('id') as string
 
   if (typeof name !== 'string' || name.length === 0) {
     return json(
@@ -75,7 +84,7 @@ export async function action({ request }: ActionArgs) {
     )
   }
 
-  const payload: PostTechnique = {
+  const payload: PutTechnique = {
     name,
     slug,
     details,
@@ -84,19 +93,28 @@ export async function action({ request }: ActionArgs) {
     isBlueBelt,
     categoryId,
     userId,
+    id,
   }
 
-  const technique = await createTechnique(payload)
+  const technique = await updateTechnique(payload)
 
   return redirect(`/techniques/${technique.slug}`)
 }
 
-export async function loader({ request }: LoaderArgs) {
-  await requireUserId(request)
+export async function loader({ request, params }: LoaderArgs) {
+  invariant(params.slug, 'slug not found')
+
+  const userId = await requireUserId(request)
 
   const categories = await getCategories()
 
-  return json({ categories })
+  const technique = await getTechnique(params.slug)
+
+  if (!technique) {
+    return new Response('Not Found', { status: 404 })
+  }
+
+  return json({ categories, technique, userId })
 }
 
 function categoryMapper(category: any) {
@@ -110,13 +128,16 @@ function categoryMapper(category: any) {
   )
 }
 
-export default function AddNewTechniquePage() {
+export default function EditTechniquePage() {
   const data = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const nameRef = useRef<HTMLInputElement>(null)
   const slugRef = useRef<HTMLInputElement>(null)
   const categoryRef = useRef<HTMLSelectElement>(null)
-  const [details, setDetails] = useState<string>('')
+  const [details, setDetails] = useState<string>(data.technique.details)
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    data.technique.category.id
+  )
 
   useEffect(() => {
     if (actionData?.errors?.name) {
@@ -132,11 +153,13 @@ export default function AddNewTechniquePage() {
     setDetails(value)
   }
 
+  const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategoryId(event.target.value)
+  }
+
   return (
     <div className="flex w-3/4 flex-col gap-6 p-6">
-      <h1 className="border-b border-gray-300 pb-2 text-2xl">
-        Add new technique
-      </h1>
+      <h1 className="border-b border-gray-300 pb-2 text-2xl">Edit technique</h1>
       <Form
         method="post"
         className="flex flex-col gap-6"
@@ -154,6 +177,7 @@ export default function AddNewTechniquePage() {
               aria-errormessage={
                 actionData?.errors?.name ? 'name-error' : undefined
               }
+              value={data.technique.name}
             />
           </label>
           {actionData?.errors?.name && (
@@ -173,6 +197,8 @@ export default function AddNewTechniquePage() {
               className="flex-1 rounded-md border-2 border-blue-500 px-3 py-1.5 text-lg leading-loose"
               name="categoryId"
               ref={categoryRef}
+              onChange={handleCategoryChange}
+              value={selectedCategoryId}
             >
               <option value="">Select Category</option>
               {data.categories!.map(categoryMapper)}
@@ -199,6 +225,7 @@ export default function AddNewTechniquePage() {
               aria-errormessage={
                 actionData?.errors?.slug ? 'title-error' : undefined
               }
+              value={data.technique.slug}
             />
           </label>
           {actionData?.errors?.slug && (
@@ -241,6 +268,12 @@ export default function AddNewTechniquePage() {
               //   actionData?.errors?.title ? "title-error" : undefined
               // }
             />
+            {data.technique.techniqueImage ? (
+              <img
+                src={`/uploads/${data.technique.techniqueImage}`}
+                alt={data.technique.name}
+              />
+            ) : null}
           </label>
           {/* {actionData?.errors?.title && (
           <div className="pt-1 text-red-700" id="title-error">
@@ -259,6 +292,7 @@ export default function AddNewTechniquePage() {
               // aria-errormessage={
               //   actionData?.errors?.title ? "title-error" : undefined
               // }
+              value={data.technique.youtubeVideoId}
             />
           </label>
           {/* {actionData?.errors?.title && (
@@ -274,10 +308,21 @@ export default function AddNewTechniquePage() {
               type="checkbox"
               name="isBlueBelt"
               value="yes"
+              defaultChecked={data.technique.isBlueBelt}
             />
           </label>
         </div>
         <div className="text-right">
+          <input
+            type="hidden"
+            name="existingImage"
+            value={data.technique.techniqueImage}
+          />
+          <input
+            type="hidden"
+            name="id"
+            value={data.technique.id}
+          />
           <button
             type="submit"
             className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"

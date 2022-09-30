@@ -1,5 +1,5 @@
 import { prisma } from '~/db.server'
-import type { PostTechnique } from '~/types'
+import type { PostTechnique, PutTechnique } from '~/types'
 
 export function getTechnique(slug: string) {
   return prisma.technique.findFirst({
@@ -7,14 +7,18 @@ export function getTechnique(slug: string) {
     select: {
       id: true,
       name: true,
+      slug: true,
       techniqueImage: true,
       details: true,
       category: {
         select: {
           slug: true,
           name: true,
+          id: true,
         },
       },
+      youtubeVideoId: true,
+      isBlueBelt: true,
     },
   })
 }
@@ -30,6 +34,45 @@ export function createTechnique({
   isBlueBelt,
 }: PostTechnique) {
   return prisma.technique.create({
+    data: {
+      name,
+      slug,
+      details,
+      techniqueImage,
+      youtubeVideoId,
+      category: {
+        connect: {
+          id: categoryId,
+        },
+      },
+      isBlueBelt,
+      createdBy: {
+        connect: {
+          id: userId,
+        },
+      },
+      updatedBy: {
+        connect: {
+          id: userId,
+        },
+      },
+    },
+  })
+}
+
+export function updateTechnique({
+  name,
+  categoryId,
+  slug,
+  details,
+  userId,
+  techniqueImage,
+  youtubeVideoId,
+  isBlueBelt,
+  id,
+}: PutTechnique) {
+  return prisma.technique.update({
+    where: { id },
     data: {
       name,
       slug,
