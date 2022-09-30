@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 // import type { Category } from '@prisma/client'
 import bcrypt from 'bcryptjs'
-import type { PostCategory } from '~/types'
-import { initialCategories } from './fixtures'
+// import type { PostCategory } from '~/types'
+// import { initialCategories } from './fixtures'
 
 const prisma = new PrismaClient()
 
@@ -22,7 +22,7 @@ async function seed() {
 
   const hashedPassword = await bcrypt.hash('bigmanchest', 10)
 
-  const user = await prisma.user.create({
+  await prisma.user.create({
     data: {
       email,
       password: {
@@ -50,19 +50,19 @@ async function seed() {
   // })
 
   // const categories = await Promise.all(
-  await Promise.all(
-    initialCategories.map((category: PostCategory) =>
-      prisma.category.create({
-        data: {
-          name: category.name,
-          slug: category.slug,
-          categoryImage: category.categoryImage,
-          createdByUserId: user.id,
-          updatedByUserId: user.id,
-        },
-      })
-    )
-  )
+  // await Promise.all(
+  //   initialCategories.map((category: PostCategory) =>
+  //     prisma.category.create({
+  //       data: {
+  //         name: category.name,
+  //         slug: category.slug,
+  //         categoryImage: category.categoryImage,
+  //         createdByUserId: user.id,
+  //         updatedByUserId: user.id,
+  //       },
+  //     })
+  //   )
+  // )
 
   // const sideControl = categories.find(
   //   (cat: Category) => cat.slug === 'side-control'
