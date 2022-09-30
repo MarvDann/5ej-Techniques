@@ -1,5 +1,5 @@
 import { prisma } from '~/db.server'
-import { PostCategory } from '~/types'
+import type { PostCategory } from '~/types'
 
 export function getCategory(slug: string) {
   return prisma.category.findFirst({
@@ -40,7 +40,7 @@ export function createCategory({
     data: {
       name,
       slug,
-      categoryImage,
+      categoryImage: categoryImage || '',
       createdBy: {
         connect: {
           id: userId,

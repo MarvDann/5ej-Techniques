@@ -25,7 +25,7 @@ export default function CategoryPage() {
       <div className="flex flex-row">
         <figure className="flex w-6/12 flex-col content-center border border-gray-200">
           <img
-            src={`/images/${data.category.categoryImage}`}
+            src={`/uploads/${data.category.categoryImage}`}
             alt={data.category.name}
           />
           <figcaption className="py-1 text-center">

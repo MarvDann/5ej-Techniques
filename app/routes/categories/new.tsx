@@ -140,7 +140,7 @@ export default function AddCategoryPage() {
           <label className="flex flex-col gap-1">
             <span>Image filename: </span>
             <input
-              name="techniqueImage"
+              name="categoryImage"
               className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
               type="file"
               // aria-invalid={actionData?.errors?.title ? true : undefined}

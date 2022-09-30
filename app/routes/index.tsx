@@ -19,16 +19,18 @@ export default function Index() {
   return (
     <div className="flex flex-col gap-2 p-6">
       <div className="grid grid-cols-3 gap-6">
-        {data &&
-          data.categories?.length &&
-          data.categories.map((cat) => (
+        {data && data.categories?.length ? (
+          data.categories.map((cat: any) => (
             <CategoryListing
               key={cat.slug}
               slug={cat.slug}
               name={cat.name}
               imgUrl={cat.categoryImage}
             />
-          ))}
+          ))
+        ) : (
+          <p>No Data available</p>
+        )}
       </div>
     </div>
   )

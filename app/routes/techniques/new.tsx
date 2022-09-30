@@ -106,7 +106,7 @@ export async function loader({ request }: LoaderArgs) {
   return json({ categories })
 }
 
-function categoryMapper(category: Cat) {
+function categoryMapper(category: any) {
   return (
     <option
       key={category.slug}
