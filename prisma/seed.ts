@@ -82,7 +82,11 @@ async function seed() {
       details:
         '<ul><li>Start from side control</li><li>Clear nearside arm</li><li>Unwind crossface arm and place elbow on jaw</li><li>Switch knees so that hip is close to head</li><li>Pushing down on the jaw, step over head and lift far side arm</li><li>Kneel straight down close feet together and sit back on head</li><li>Gable grip hands and rock the baby so hand position is other side of the arm</li><li>Take kimura grip on forearm</li><li>Keep tricep on your chest and disconnect their shoulder socket</li><li>Look towards where their back is facing and finish the kimura</li></ul>',
       techniqueImage: 'fernao.png',
-      categoryId: sideControl!.id,
+      category: {
+        connect: {
+          id: sideControl!.id,
+        },
+      },
       createdBy: {
         connect: {
           id: user.id,
