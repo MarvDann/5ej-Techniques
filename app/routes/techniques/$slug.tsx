@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 import { deleteTechnique, getTechnique } from '~/models/technique.server'
-import { getUserId } from '~/session.server'
+import { getUserId, requireUserId } from '~/session.server'
 import editorStylesUrl from './editorStyles.css'
 import type { LinksFunction } from '@remix-run/node'
 import TechniqueTop from '~/components/TechniqueTop'
@@ -32,6 +32,8 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export async function action({ request }: ActionArgs) {
+  await requireUserId(request)
+
   const formData = await request.formData()
 
   const id = formData.get('id') as string
