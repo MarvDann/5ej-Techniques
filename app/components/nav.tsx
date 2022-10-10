@@ -5,17 +5,20 @@ type Cat = Pick<Category, 'name' | 'slug'>
 
 interface Props {
   categories: Cat[]
+  userId?: string
 }
 
-export default function Nav({ categories }: Props) {
+export default function Nav({ categories, userId }: Props) {
   return (
     <div className="h-full min-w-fit border-r bg-gray-100">
-      <Link
-        to="/categories/new"
-        className="block p-4 text-lg text-blue-800"
-      >
-        + Add Category
-      </Link>
+      {userId && (
+        <Link
+          to="/categories/new"
+          className="block p-4 text-lg text-blue-800"
+        >
+          + Add Category
+        </Link>
+      )}
       <hr />
       <ul>
         {categories.map((cat: Cat) => (
