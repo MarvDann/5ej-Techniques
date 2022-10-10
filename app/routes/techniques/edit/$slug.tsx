@@ -302,7 +302,7 @@ export default function EditTechniquePage() {
               // aria-errormessage={
               //   actionData?.errors?.title ? "title-error" : undefined
               // }
-              value={data.technique.youtubeVideoId || ''}
+              defaultValue={data.technique.youtubeVideoId || ''}
             />
           </label>
           {/* {actionData?.errors?.title && (

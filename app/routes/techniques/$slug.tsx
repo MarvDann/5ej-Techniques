@@ -77,6 +77,18 @@ export default function TechniqueDetailPage() {
           ></div>
         </div>
       </div>
+      {data.technique.youtubeVideoId && (
+        <div className="p-6">
+          <iframe
+            className="h-screen w-full"
+            src={`https://www.youtube-nocookie.com/embed/${data.technique.youtubeVideoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      )}
     </div>
   )
 }
