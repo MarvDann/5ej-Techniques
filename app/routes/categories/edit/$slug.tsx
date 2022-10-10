@@ -178,7 +178,7 @@ export default function EditCategoryPage() {
           <input
             type="hidden"
             name="existingImage"
-            value={data.category.categoryImage}
+            value={data.category.categoryImage || ''}
           />
           <input
             type="hidden"
