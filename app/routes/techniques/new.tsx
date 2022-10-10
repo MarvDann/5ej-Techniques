@@ -8,11 +8,11 @@ import {
 } from '@remix-run/node'
 import type { ActionArgs, LoaderArgs, NodeOnDiskFile } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
-import { getCategories } from '~/models/category.server'
+import { getCategories, getCategory } from '~/models/category.server'
 import type { PostTechnique } from '~/types'
 import { createTechnique } from '~/models/technique.server'
 import { requireUserId } from '~/session.server'
-import { useEffect, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import QuillEditor from '~/components/QuillEditor.client'
 import stylesUrl from 'react-quill/dist/quill.snow.css'
 import type { LinksFunction } from '@remix-run/node'
@@ -94,9 +94,16 @@ export async function action({ request }: ActionArgs) {
 export async function loader({ request }: LoaderArgs) {
   await requireUserId(request)
 
+  const url = new URL(request.url)
+  const slug = url.searchParams.get('category')
+
   const categories = await getCategories()
 
-  return json({ categories })
+  const selectedCategoryId = slug
+    ? categories.find((cat) => cat.slug === slug)?.id
+    : undefined
+
+  return json({ categories, selectedCategoryId })
 }
 
 function categoryMapper(category: any) {
@@ -118,6 +125,9 @@ export default function AddNewTechniquePage() {
   const categoryRef = useRef<HTMLSelectElement>(null)
   const [details, setDetails] = useState<string>('')
 
+  const [name, setName] = useState('')
+  const [slug, setSlug] = useState('')
+
   useEffect(() => {
     if (actionData?.errors?.name) {
       nameRef.current?.focus()
@@ -130,6 +140,14 @@ export default function AddNewTechniquePage() {
 
   const handleEditorChange = (value: string) => {
     setDetails(value)
+  }
+
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newName = event.target.value
+
+    setName(newName)
+
+    setSlug(newName.toLowerCase().replace(/\s+/g, '-'))
   }
 
   return (
@@ -154,6 +172,8 @@ export default function AddNewTechniquePage() {
               aria-errormessage={
                 actionData?.errors?.name ? 'name-error' : undefined
               }
+              onChange={handleNameChange}
+              value={name}
             />
           </label>
           {actionData?.errors?.name && (
@@ -173,6 +193,7 @@ export default function AddNewTechniquePage() {
               className="flex-1 rounded-md border-2 border-blue-500 px-3 py-1.5 text-lg leading-loose"
               name="categoryId"
               ref={categoryRef}
+              value={data.selectedCategoryId}
             >
               <option value="">Select Category</option>
               {data.categories!.map(categoryMapper)}
@@ -199,6 +220,7 @@ export default function AddNewTechniquePage() {
               aria-errormessage={
                 actionData?.errors?.slug ? 'title-error' : undefined
               }
+              value={slug}
             />
           </label>
           {actionData?.errors?.slug && (

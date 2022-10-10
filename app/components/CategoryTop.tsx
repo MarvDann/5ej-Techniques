@@ -20,9 +20,14 @@ export default function CategoryTop({ category, userId }: Props) {
       <div className="flex flex-row gap-4">
         {userId && (
           <>
+            <Link to={`/techniques/new?category=${category.slug}`}>
+              <button className="rounded-md bg-green-700 px-3 py-1 text-sm text-white">
+                + Add Technique
+              </button>
+            </Link>
             <Link to={`/categories/edit/${category.slug}`}>
               <button className="rounded-md bg-blue-700 px-3 py-1 text-sm text-white">
-                Edit
+                Edit Category
               </button>
             </Link>
             <Form method="post">
@@ -35,7 +40,7 @@ export default function CategoryTop({ category, userId }: Props) {
                 type="submit"
                 className="rounded-md bg-red-700 px-3 py-1 text-sm text-white"
               >
-                Delete
+                Delete Category
               </button>
             </Form>
           </>

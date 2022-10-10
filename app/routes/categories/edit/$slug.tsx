@@ -1,6 +1,6 @@
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import type { LoaderArgs, ActionArgs, NodeOnDiskFile } from '@remix-run/node'
-import { useEffect, useRef } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import {
   json,
   redirect,
@@ -84,6 +84,8 @@ export default function EditCategoryPage() {
   const actionData = useActionData<typeof action>()
   const nameRef = useRef<HTMLInputElement>(null)
   const slugRef = useRef<HTMLInputElement>(null)
+  const [name, setName] = useState(data.category.name)
+  const [slug, setSlug] = useState(data.category.slug)
 
   useEffect(() => {
     if (actionData?.errors?.name) {
@@ -92,6 +94,14 @@ export default function EditCategoryPage() {
       slugRef.current?.focus()
     }
   }, [actionData])
+
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newName = event.target.value
+
+    setName(newName)
+
+    setSlug(newName.toLowerCase().replace(/\s+/g, '-'))
+  }
 
   return (
     <div className="flex w-3/4 flex-col gap-6 p-6">
@@ -113,7 +123,8 @@ export default function EditCategoryPage() {
               aria-errormessage={
                 actionData?.errors?.name ? 'name-error' : undefined
               }
-              defaultValue={data.category.name}
+              value={name}
+              onChange={handleNameChange}
             />
           </label>
           {actionData?.errors?.name && (
@@ -137,7 +148,7 @@ export default function EditCategoryPage() {
               aria-errormessage={
                 actionData?.errors?.slug ? 'title-error' : undefined
               }
-              defaultValue={data.category.slug}
+              value={slug}
             />
           </label>
           {actionData?.errors?.slug && (

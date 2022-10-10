@@ -135,6 +135,8 @@ export default function EditTechniquePage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     data.technique.category.id
   )
+  const [name, setName] = useState(data.technique.name)
+  const [slug, setSlug] = useState(data.technique.slug)
 
   useEffect(() => {
     if (actionData?.errors?.name) {
@@ -152,6 +154,14 @@ export default function EditTechniquePage() {
 
   const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategoryId(event.target.value)
+  }
+
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newName = event.target.value
+
+    setName(newName)
+
+    setSlug(newName.toLowerCase().replace(/\s+/g, '-'))
   }
 
   return (
@@ -174,7 +184,8 @@ export default function EditTechniquePage() {
               aria-errormessage={
                 actionData?.errors?.name ? 'name-error' : undefined
               }
-              value={data.technique.name}
+              value={name}
+              onChange={handleNameChange}
             />
           </label>
           {actionData?.errors?.name && (
@@ -222,7 +233,7 @@ export default function EditTechniquePage() {
               aria-errormessage={
                 actionData?.errors?.slug ? 'title-error' : undefined
               }
-              value={data.technique.slug}
+              value={slug}
             />
           </label>
           {actionData?.errors?.slug && (

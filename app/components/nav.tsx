@@ -14,13 +14,7 @@ export default function Nav({ categories }: Props) {
         to="/categories/new"
         className="block p-4 text-lg text-blue-800"
       >
-        + Add New Category
-      </Link>
-      <Link
-        to="/techniques/new"
-        className="block p-4 text-lg text-blue-800"
-      >
-        + Add New Technique
+        + Add Category
       </Link>
       <hr />
       <ul>
