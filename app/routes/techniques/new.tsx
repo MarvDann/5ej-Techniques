@@ -211,8 +211,10 @@ export default function AddNewTechniquePage() {
           )}
         </div>
         <div>
-          <label className="flex flex-col gap-1 pb-4">
-            <span>Details: </span>
+          <div className="flex flex-col gap-1 pb-4">
+            <label htmlFor="details">
+              <span>Details: </span>
+            </label>
             <QuillEditor
               onChange={handleEditorChange}
               value={details}
@@ -222,7 +224,7 @@ export default function AddNewTechniquePage() {
               value={details}
               name="details"
             />
-          </label>
+          </div>
           {/* {actionData?.errors?.title && (
           <div className="pt-1 text-red-700" id="title-error">
             {actionData.errors.title}

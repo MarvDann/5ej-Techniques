@@ -20,7 +20,7 @@ export default function CategoryTop({ category, userId }: Props) {
       <div className="flex flex-row gap-4">
         {userId && (
           <>
-            <Link to={`/category/edit/${category.slug}`}>
+            <Link to={`/categories/edit/${category.slug}`}>
               <button className="rounded-md bg-blue-700 px-3 py-1 text-sm text-white">
                 Edit
               </button>

@@ -5,6 +5,10 @@ export interface PostCategory {
   categoryImage?: string
 }
 
+export interface PutCategory extends PostCategory {
+  id: string
+}
+
 export interface PostTechnique {
   name: string
   slug: string

@@ -1,5 +1,5 @@
 import { prisma } from '~/db.server'
-import type { PostCategory } from '~/types'
+import type { PostCategory, PutCategory } from '~/types'
 
 export function getCategory(slug: string) {
   return prisma.category.findFirst({
@@ -47,6 +47,28 @@ export function createCategory({
           id: userId,
         },
       },
+      updatedBy: {
+        connect: {
+          id: userId,
+        },
+      },
+    },
+  })
+}
+
+export function updateCategory({
+  id,
+  name,
+  slug,
+  categoryImage,
+  userId,
+}: PutCategory) {
+  return prisma.category.update({
+    where: { id },
+    data: {
+      name,
+      slug,
+      categoryImage: categoryImage || '',
       updatedBy: {
         connect: {
           id: userId,

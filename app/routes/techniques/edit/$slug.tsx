@@ -9,14 +9,11 @@ import {
 import type { ActionArgs, LoaderArgs, NodeOnDiskFile } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { getCategories } from '~/models/category.server'
-import type { PostTechnique, PutTechnique } from '~/types'
-import {
-  createTechnique,
-  getTechnique,
-  updateTechnique,
-} from '~/models/technique.server'
+import type { PutTechnique } from '~/types'
+import { getTechnique, updateTechnique } from '~/models/technique.server'
 import { requireUserId } from '~/session.server'
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { ChangeEvent } from 'react'
 import QuillEditor from '~/components/QuillEditor.client'
 import stylesUrl from 'react-quill/dist/quill.snow.css'
 import type { LinksFunction } from '@remix-run/node'
@@ -111,7 +108,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const technique = await getTechnique(params.slug)
 
   if (!technique) {
-    return new Response('Not Found', { status: 404 })
+    throw new Response('Not Found', { status: 404 })
   }
 
   return json({ categories, technique, userId })
@@ -134,7 +131,7 @@ export default function EditTechniquePage() {
   const nameRef = useRef<HTMLInputElement>(null)
   const slugRef = useRef<HTMLInputElement>(null)
   const categoryRef = useRef<HTMLSelectElement>(null)
-  const [details, setDetails] = useState<string>(data.technique.details)
+  const [details, setDetails] = useState<string | null>(data.technique.details)
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     data.technique.category.id
   )
@@ -238,18 +235,20 @@ export default function EditTechniquePage() {
           )}
         </div>
         <div>
-          <label className="flex flex-col gap-1 pb-4">
-            <span>Details: </span>
+          <div className="flex flex-col gap-1 pb-4">
+            <label htmlFor="details">
+              <span>Details: </span>
+            </label>
             <QuillEditor
               onChange={handleEditorChange}
-              value={details}
+              value={details || ''}
             />
             <input
               type="hidden"
-              value={details}
+              value={details || ''}
               name="details"
             />
-          </label>
+          </div>
           {/* {actionData?.errors?.title && (
           <div className="pt-1 text-red-700" id="title-error">
             {actionData.errors.title}
@@ -292,7 +291,7 @@ export default function EditTechniquePage() {
               // aria-errormessage={
               //   actionData?.errors?.title ? "title-error" : undefined
               // }
-              value={data.technique.youtubeVideoId}
+              value={data.technique.youtubeVideoId || ''}
             />
           </label>
           {/* {actionData?.errors?.title && (
@@ -316,7 +315,7 @@ export default function EditTechniquePage() {
           <input
             type="hidden"
             name="existingImage"
-            value={data.technique.techniqueImage}
+            value={data.technique.techniqueImage || ''}
           />
           <input
             type="hidden"

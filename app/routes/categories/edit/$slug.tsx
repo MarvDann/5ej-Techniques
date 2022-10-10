@@ -1,4 +1,4 @@
-import { Form, useActionData } from '@remix-run/react'
+import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import type { LoaderArgs, ActionArgs, NodeOnDiskFile } from '@remix-run/node'
 import { useEffect, useRef } from 'react'
 import {
@@ -10,8 +10,9 @@ import {
   unstable_parseMultipartFormData,
 } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
-import type { PostCategory } from '~/types'
-import { createCategory } from '~/models/category.server'
+import type { PutCategory } from '~/types'
+import { getCategory, updateCategory } from '~/models/category.server'
+import invariant from 'tiny-invariant'
 
 export async function action({ request }: ActionArgs) {
   const userId = await requireUserId(request)
@@ -32,8 +33,10 @@ export async function action({ request }: ActionArgs) {
   const uploadedImage = formData.get('categoryImage') as
     | NodeOnDiskFile
     | undefined
+  const existingImage = (formData.get('existingImage') as string) || undefined
+  const categoryImage = uploadedImage?.name ? uploadedImage.name : existingImage
 
-  const categoryImage = uploadedImage ? uploadedImage?.name : undefined
+  const id = formData.get('id') as string
 
   if (typeof name !== 'string' || name.length === 0) {
     return json(
@@ -49,25 +52,35 @@ export async function action({ request }: ActionArgs) {
     )
   }
 
-  const payload: PostCategory = {
+  const payload: PutCategory = {
     name,
     slug,
     userId,
     categoryImage,
+    id,
   }
 
-  const category = await createCategory(payload)
+  const category = await updateCategory(payload)
 
   return redirect('/categories/' + category.slug)
 }
 
-export async function loader({ request }: LoaderArgs) {
-  await requireUserId(request)
+export async function loader({ request, params }: LoaderArgs) {
+  invariant(params.slug, 'slug not found')
 
-  return null
+  const userId = await requireUserId(request)
+
+  const category = await getCategory(params.slug)
+
+  if (!category) {
+    throw new Response('Not Found', { status: 404 })
+  }
+
+  return json({ category, userId })
 }
 
-export default function AddCategoryPage() {
+export default function EditCategoryPage() {
+  const data = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const nameRef = useRef<HTMLInputElement>(null)
   const slugRef = useRef<HTMLInputElement>(null)
@@ -82,9 +95,7 @@ export default function AddCategoryPage() {
 
   return (
     <div className="flex w-3/4 flex-col gap-6 p-6">
-      <h1 className="border-b border-gray-300 pb-2 text-2xl">
-        Add new Category
-      </h1>
+      <h1 className="border-b border-gray-300 pb-2 text-2xl">Edit Category</h1>
       <Form
         method="post"
         className="flex flex-col gap-6"
@@ -102,6 +113,7 @@ export default function AddCategoryPage() {
               aria-errormessage={
                 actionData?.errors?.name ? 'name-error' : undefined
               }
+              defaultValue={data.category.name}
             />
           </label>
           {actionData?.errors?.name && (
@@ -125,6 +137,7 @@ export default function AddCategoryPage() {
               aria-errormessage={
                 actionData?.errors?.slug ? 'title-error' : undefined
               }
+              defaultValue={data.category.slug}
             />
           </label>
           {actionData?.errors?.slug && (
@@ -148,6 +161,12 @@ export default function AddCategoryPage() {
               //   actionData?.errors?.title ? "title-error" : undefined
               // }
             />
+            {data.category.categoryImage ? (
+              <img
+                src={`/uploads/${data.category.categoryImage}`}
+                alt={data.category.name}
+              />
+            ) : null}
           </label>
           {/* {actionData?.errors?.title && (
           <div className="pt-1 text-red-700" id="title-error">
@@ -156,6 +175,16 @@ export default function AddCategoryPage() {
         )} */}
         </div>
         <div className="text-right">
+          <input
+            type="hidden"
+            name="existingImage"
+            value={data.category.categoryImage}
+          />
+          <input
+            type="hidden"
+            name="id"
+            value={data.category.id}
+          />
           <button
             type="submit"
             className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
