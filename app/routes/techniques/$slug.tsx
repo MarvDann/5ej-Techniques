@@ -80,7 +80,7 @@ export default function TechniqueDetailPage() {
       {data.technique.youtubeVideoId && (
         <div className="py-2 px-6 md:py-6">
           <iframe
-            style={{ width: '94vw', height: '50vw' }}
+            style={{ width: '78vw', height: '42vw', margin: '0 auto' }}
             src={`https://www.youtube-nocookie.com/embed/${data.technique.youtubeVideoId}`}
             title="YouTube video player"
             frameBorder="0"
