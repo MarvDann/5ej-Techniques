@@ -18,7 +18,7 @@ export default function Index() {
 
   return (
     <div className="flex flex-col gap-2 p-6">
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
         {data && data.categories?.length ? (
           data.categories.map((cat: any) => (
             <CategoryListing
