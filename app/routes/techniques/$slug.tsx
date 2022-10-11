@@ -57,8 +57,8 @@ export default function TechniqueDetailPage() {
         category={data.technique.category}
         userId={data.userId}
       />
-      <div className="gap 2 flex flex-row p-6">
-        <div className="flex w-6/12 flex-col gap-2">
+      <div className="gap 2 flex flex-col p-6 md:flex-row">
+        <div className="flex flex-col gap-2 md:w-6/12">
           <figure className="flex flex-col content-center border border-gray-200">
             <img
               src={imageUrl}
@@ -78,9 +78,9 @@ export default function TechniqueDetailPage() {
         </div>
       </div>
       {data.technique.youtubeVideoId && (
-        <div className="p-6">
+        <div className="py-2 px-6 md:py-6">
           <iframe
-            className="h-screen w-full"
+            style={{ width: '94vw', height: '50vw' }}
             src={`https://www.youtube-nocookie.com/embed/${data.technique.youtubeVideoId}`}
             title="YouTube video player"
             frameBorder="0"

@@ -22,10 +22,12 @@ export default function CategoriesPage() {
 
   return (
     <>
-      <Nav
-        categories={data?.categories}
-        userId={data?.userId}
-      />
+      <div className="hidden md:visible">
+        <Nav
+          categories={data?.categories}
+          userId={data?.userId}
+        />
+      </div>
       <div className="w-full">
         <Outlet />
       </div>

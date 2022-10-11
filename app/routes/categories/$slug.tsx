@@ -47,8 +47,8 @@ export default function CategoryPage() {
         category={data.category}
         userId={data.userId}
       />
-      <div className="flex flex-row gap-2 p-6">
-        <figure className="flex w-6/12 flex-col content-center border border-gray-200">
+      <div className="flex flex-col gap-2 p-6 md:flex-row">
+        <figure className="flex w-full flex-col content-center border border-gray-200 md:w-6/12">
           <img
             src={imageUrl}
             alt={data.category.name}

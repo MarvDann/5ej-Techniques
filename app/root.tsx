@@ -14,6 +14,7 @@ import tailwindStylesheetUrl from './styles/tailwind.css'
 import { getUser } from './session.server'
 import type { User } from '@prisma/client'
 import Header from './components/header'
+import { getCategories } from './models/category.server'
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: tailwindStylesheetUrl }]
@@ -26,19 +27,23 @@ export const meta: MetaFunction = () => ({
 })
 
 export async function loader({ request }: LoaderArgs) {
+  const categories = await getCategories()
+
   return json({
     user: await getUser(request),
     url: request.url,
+    categories,
   })
 }
 
 interface LoaderData {
   user?: User
   url: string
+  categories: any
 }
 
 export default function App() {
-  let { user, url } = useLoaderData<LoaderData>()
+  let { user, url, categories } = useLoaderData<LoaderData>()
   return (
     <html
       lang="en"
@@ -53,6 +58,7 @@ export default function App() {
           <Header
             user={user}
             currentUrl={url}
+            categories={categories}
           />
           <main className="flex h-full bg-white">
             <Outlet />
