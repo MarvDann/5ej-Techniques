@@ -22,7 +22,7 @@ export default function TechniquesPage() {
 
   return (
     <>
-      <div className="hidden md:visible">
+      <div className="hidden h-full min-w-fit md:block">
         <Nav
           categories={data?.categories}
           userId={data?.userId}

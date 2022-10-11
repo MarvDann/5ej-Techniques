@@ -40,7 +40,7 @@ export default function Header({ user, currentUrl, categories }: Props) {
               method="post"
             >
               <div className="flex items-center justify-between gap-2">
-                <p className="hidden md:visible">{user?.email}</p>
+                <p className="hidden md:block">{user?.email}</p>
                 <button
                   type="submit"
                   className="rounded bg-slate-600 py-1.5 px-3 text-sm text-blue-100 hover:bg-blue-500 active:bg-blue-600"
