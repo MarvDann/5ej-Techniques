@@ -64,7 +64,7 @@ export default function Header({ user, currentUrl, categories }: Props) {
           <div className="block lg:hidden">
             <button
               onClick={handleMenuClick}
-              className="flex items-center rounded border-2 border-slate-400 px-3 py-2 text-slate-400 hover:border-white hover:text-white"
+              className="flex items-center rounded border-2 border-slate-400 px-3 py-2 text-slate-400 hover:border-slate-300 hover:text-slate-300"
             >
               <svg
                 className="h-3 w-3 fill-current"
